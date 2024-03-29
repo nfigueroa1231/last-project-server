@@ -7,6 +7,9 @@ var mongoose = require('mongoose')
 // var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth')
+var accountRouter = require('./routes/accounts')
+var miLumaRouter = require('./routes/miLuma')
+
 
 var app = express();
 
@@ -29,7 +32,11 @@ app.use(
 
 // app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/auth', authRouter)
+app.use('/auth', authRouter);
+app.use('/accounts', accountRouter);
+app.use('/miLuma', miLumaRouter)
+
+
 
 mongoose
   .connect(process.env.MONGODB_URI)
