@@ -34,7 +34,7 @@ app.use(
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/accounts', accountRouter);
-app.use('/miLuma', miLumaRouter)
+app.use('/mi-luma', miLumaRouter)
 
 
 
