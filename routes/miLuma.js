@@ -5,16 +5,8 @@ var axios = require('axios')
 
 /* GET users listing. */
 router.post('/account-info', (req, res, next) => {
-
-
     const { token } = req.body
-
-    console.log("this is the token", token)
-
     const endpoint = 'https://api.miluma.lumapr.com/miluma-api/api/v2/users/me'
-
-
-
         axios.get(endpoint, {
             headers: { Authorization: `Bearer ${token}` },
           })
@@ -42,20 +34,20 @@ router.post('/', (req, res, next) => {
     })
 })
 
-router.post('/acueductos', (req, res, next) => {
-    const { email, password } = req.body
-    console.log("this is email and password ===>", email, password)
-    axios.post('https://miacueductos.acueductospr.com/api/v1/login', {email, password})
-    .then((response) => {
-        console.log("this is the user auth response", response.data)
-        res.json(response.data)
-    })
-    .catch((err) => {
-        console.log("Error logging in", err)
-        res.json({errorMessage: "Error logging in", err})
-    })
+// router.post('/acueductos', (req, res, next) => {
+//     const { email, password } = req.body
+//     console.log("this is email and password ===>", email, password)
+//     axios.post('https://miacueductos.acueductospr.com/api/v1/login', {email, password})
+//     .then((response) => {
+//         console.log("this is the user auth response", response.data)
+//         res.json(response.data)
+//     })
+//     .catch((err) => {
+//         console.log("Error logging in", err)
+//         res.json({errorMessage: "Error logging in", err})
+//     })
 
 
-})
+// })
 
 module.exports = router;

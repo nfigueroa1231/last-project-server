@@ -5,12 +5,12 @@ const AccountSchema = new Schema(
             type: String,
             required: true
         },
-        company: {
+        name: {
             type: String,
             required: true
         },
-        name: {
-            type: String,
+        currentBalance: {
+            type: Number, 
             required: true
         },
         // phone: Number,
@@ -26,6 +26,10 @@ const AccountSchema = new Schema(
         user: {
             type: Schema.Types.ObjectId,
             ref: "User"
+        },
+        provider: {
+            type: Schema.Types.ObjectId,
+            ref: "Provider"
         },
         // dueDate: {
         //     type: Date,
