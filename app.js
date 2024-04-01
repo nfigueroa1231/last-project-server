@@ -8,7 +8,6 @@ var mongoose = require('mongoose')
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth')
 var accountRouter = require('./routes/accounts')
-var miLumaRouter = require('./routes/miLuma')
 var providerRouter = require('./routes/providers');
 const isAuthenticated = require('./middleware/isAuthenticated');
 
@@ -37,7 +36,6 @@ app.use('/auth', authRouter);
 app.use(isAuthenticated)
 app.use('/users', usersRouter);
 app.use('/accounts', accountRouter);
-app.use('/mi-luma', miLumaRouter)
 app.use('/providers', providerRouter);
 
 

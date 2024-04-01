@@ -1,15 +1,23 @@
 const { model, Schema } = require("mongoose");
-const ProviderSchema = new Schema(
+const PaymentSchema = new Schema(
     {
-        username: {
+        bankName: {
             type: String,
             required: true
         },
-        password: {
+        bankAccount: {
+            type: Number,
+            required: true
+        },
+        banckRouting: {
+            type: Number,
+            required: true
+        },
+        bankType: {
             type: String,
             required: true
         },
-        type: {
+        accountHolder: {
             type: String,
             required: true
         },
@@ -22,7 +30,7 @@ const ProviderSchema = new Schema(
         timestamps: true,
     }
 );
-module.exports = model("Provider", ProviderSchema);
+module.exports = model("Payment", PaymentSchema);
 
 
 

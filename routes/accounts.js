@@ -7,12 +7,12 @@ const isAuthenticated = require('../middleware/isAuthenticated')
 
 router.post('/', isAuthenticated, (req, res, next) => {
 
-    const { accountNumber, company, name } = req.body
+    const { accountNumber, currentBalance, providerId } = req.body
 
     Account.create({
         accountNumber,
-        company,
-        name,
+        currentBalance,
+        providerId,
         user: req.user._id
     })
         .then((createdAccount) => {
