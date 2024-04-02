@@ -6,6 +6,7 @@ const Provider = require('../models/Provider')
 
 const isAuthenticated = require('../middleware/isAuthenticated');
 const Account = require('../models/Account');
+const { aggregate } = require('../models/User');
 
 router.post('/', async (req, res, next) => {
 
@@ -51,6 +52,7 @@ router.post('/', async (req, res, next) => {
                 {
                     accountNumber: account.accountNumber,
                     currentBalance: account.currentBalance,
+                    userId: req.user._id,
                     providerId: createdProvider._id //el que se creo en ese momento
                 },
                 { upsert: true }, //crea uno nuevo si no existe
@@ -67,7 +69,24 @@ router.post('/', async (req, res, next) => {
     }
 })
 
+router.get('/', async(req, res, next) => {
+    console.log("backend providers ===>")
+    try { 
+            const userProviders = await Provider.find({
+                userId: req.user._id
+              }) //  aggregate Accounts para que este call tabien traiga los accounts
+              console.log({userProviders})
+              res.json(userProviders);
 
+
+    } 
+    catch (err) {
+        console.log(err)
+        res.json(err) 
+
+    }
+
+})
 
 
 
