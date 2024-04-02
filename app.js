@@ -10,6 +10,7 @@ var authRouter = require('./routes/auth')
 var accountRouter = require('./routes/accounts')
 var providerRouter = require('./routes/providers');
 const isAuthenticated = require('./middleware/isAuthenticated');
+// var photoRoute = require('./routes/photo')
 
 
 var app = express();
