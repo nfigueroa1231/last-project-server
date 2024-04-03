@@ -33,7 +33,7 @@ router.get('/user-accounts', isAuthenticated, (req, res, next) => {
     user: req.user._id
   })
   .then((foundAccounts) => {
-    console.log("These are the user's Account ===>", foundAccount)
+    console.log("These are the user's Account ===>", foundAccounts)
     res.json(foundAccounts)
   })
   .catch((err) => {

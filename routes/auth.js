@@ -12,7 +12,7 @@ const User = require("../models/User");
 const isAuthenticated = require('../middleware/isAuthenticated')
 
 router.post("/signup", (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, lastName } = req.body;
 
   // Check if the email or password or name is provided as an empty string
   if (!email || !password || !name) {
@@ -49,16 +49,16 @@ router.post("/signup", (req, res, next) => {
 
       // Create a new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      User.create({ email, password: hashedPassword, name })
+      User.create({ email, password: hashedPassword, name, lastName })
         .then((createdUser) => {
           // Deconstruct the newly created user object to omit the password
           // We should never expose passwords publicly
-          const { email, name, _id } = createdUser;
+          const { email, name, lastName, _id } = createdUser;
 
           // Create a new object that doesn't expose the password
-          const user = { email, name, _id };
+          const user = { email, name, lastName, _id };
 
-          const payload = { _id, email, name };
+          const payload = { _id, email, lastName, name };
 
           // Create and sign the token
           const authToken = jwt.sign(
@@ -113,10 +113,10 @@ router.post('/login', (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name } = foundUser;
+        const { _id, email, name, lastName } = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, name };
+        const payload = { _id, email, name, lastName };
 
         // Create and sign the token
         const authToken = jwt.sign(

@@ -20,11 +20,11 @@ const AccountSchema = new Schema(
             type: String,
             required: false,
         },
-        delinquentAmount: {
+        delinquentAmount: {    
             type: Number,
             required: false
         },
-        email: {
+        email: {            
             type: String,
             required: false
         },
@@ -60,11 +60,11 @@ const AccountSchema = new Schema(
             type: String,
             required: true
         },
-        name: {
+        name: {                
             type: String,
             required: false
         },
-        currentBalance: {
+        currentBalance: {   
             type: Number,
             required: true
         },

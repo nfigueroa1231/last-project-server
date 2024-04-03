@@ -23,67 +23,144 @@ router.post('/', async (req, res, next) => {
             headers: { Authorization: `Bearer ${lumaToken}` },
         })
         const accounts = accountResponse.data.data.accounts
-
+        // username: {
+        //     type: String,
+        //     required: true
+        // },
+        // password: {
+        //     type: String,
+        //     required: true
+        // },
+        // type: {
+        //     type: String,
+        //     required: true
+        // },
+        // userId: {
         //guarda cuenta de luma
-        const createdProvider = await Provider.updateOne(
+        const createdProvider = await Provider.create(
             {
                 type: 'Luma',
-                username,
-                userId: req.user._id
-            }, //este objecto es el filter, para match si ya existe
-            {
                 username,
                 password,
-                type: 'Luma',
                 userId: req.user._id
-            }, //este objecto es el update que queremos hacer
-            { upsert: true }, //crea uno nuevo si no existe
-            { new: true } //para que devuelva el mas nuevo
+            }
         )
+        // const createdProvider = await Provider.updateOne(
+        //     {
+        //         type: 'Luma',
+        //         username,
+        //         userId: req.user._id
+        //     }, //este objecto es el filter, para match si ya existe
+        //     {
+        //         username,
+        //         password,
+        //         type: 'Luma',
+        //         userId: req.user._id
+        //     }, //este objecto es el update que queremos hacer
+        //     { upsert: true }, //crea uno nuevo si no existe
+        //     { new: true } //para que devuelva el mas nuevo
+        // )
 
         const accountList = []
         for (const account of accounts) {
-            const createdAccount = await Account.updateOne(
-                {
-                    accountNumber: account.accountNumber,
-                    providerId: createdProvider._id
-                },
-                {
-                    accountNumber: account.accountNumber,
-                    currentBalance: account.currentBalance,
-                    userId: req.user._id,
-                    providerId: createdProvider._id //el que se creo en ese momento
-                },
-                { upsert: true }, //crea uno nuevo si no existe
-                { new: true } //para que devuelva el mas nuevo
-
+            const createdAccount = await Account.create({...account, user: req.user._id, providerId: createdProvider._id}
             )
             accountList.push(createdAccount)
         };
+        // for (const account of accounts) {
+        //     const createdAccount = await Account.updateOne(
+        //         {
+        //             accountNumber: account.accountNumber,
+        //             providerId: createdProvider._id
+        //         },
+        //         {
+        //             accountNumber: account.accountNumber,
+        //             currentBalance: account.currentBalance,
+        //             userId: req.user._id,
+        //             providerId: createdProvider._id //el que se creo en ese momento
+        //         },
+        //         { upsert: true }, //crea uno nuevo si no existe
+        //         { new: true } //para que devuelva el mas nuevo
 
-        res.json(accountList);
+        //     )
+        //     accountList.push(createdAccount)
+        // };
+
+        res.json({createdProvider, accountList});
     } catch (err) {
         console.log(err)
         res.json(err)
     }
 })
 
-router.get('/', async (req, res, next) => {
+router.get('/', isAuthenticated, async (req, res, next) => {
     console.log("backend providers ===>")
     try {
-        const userProviders = await Provider.find({
+        const userProviders = await Provider.find({  //find all the providers with that userId
             userId: req.user._id
         })
-        
-        //  aggregate en mongoDB Accounts para que este call tambien traiga los accounts    !!!!!!!!!!!!!!!!!!
-        console.log({ userProviders })
-        res.json(userProviders);
 
+        const accounts = await Account.find({user: req.user._id})  //find the accounts with that user ID
+
+        console.log("These are the accounts =====>", {userProviders, accounts})
+
+        let povidersWithAccounts = userProviders.map((prov) => {
+            return {
+                ...prov._doc,
+                accounts: accounts.filter((account) => account.providerId.toString() == prov._id.toString()) //accounts that belong to that perticular provider
+            }
+        })
+        
+        console.log({ povidersWithAccounts })
+        res.json(povidersWithAccounts);
 
     }
     catch (err) {
         console.log(err)
         res.json(err)
+
+    }
+
+})
+
+
+router.get('/details/:providerId', isAuthenticated, async (req, res, next) => {
+
+    try {
+
+        let thisProvider = await Provider.findById(req.params.providerId)
+
+        let username = thisProvider.username
+        let password = thisProvider.password
+
+        const authResponse = await axios.post('https://api.miluma.lumapr.com/miluma-api/auth', { username, password })
+        const lumaToken = authResponse.data.data.token;
+        // console.log(authResponse)
+
+        // Getting luma user accounts
+        // const endpointAccount = 'https://api.miluma.lumapr.com/miluma-api/api/v2/users/me' o
+        const accountResponse = await axios.get('https://api.miluma.lumapr.com/miluma-api/api/v2/users/me', {
+            headers: { Authorization: `Bearer ${lumaToken}` },
+        })
+
+        const accounts = accountResponse.data.data.accounts
+
+        const accountList = []
+        for (const account of accounts) {
+            const updatedAccount = await Account.findOneAndUpdate(
+                {accountNumber: account.accountNumber}, //filter
+                {...account, user: req.user._id, providerId: thisProvider._id}, // change everything except ...
+                {new: true}
+            )
+            accountList.push(updatedAccount)
+        };
+
+
+        console.log("this is the fresh provider", accountList)
+
+        res.json({thisProvider, accountList})
+
+    } catch(err) {
 
     }
 
