@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth')
 var accountRouter = require('./routes/accounts')
 var providerRouter = require('./routes/providers');
+var paymentsRouter = require('./routes/payments')
 const isAuthenticated = require('./middleware/isAuthenticated');
 // var photoRoute = require('./routes/photo')
 
@@ -38,6 +39,7 @@ app.use(isAuthenticated)
 app.use('/users', usersRouter);
 app.use('/accounts', accountRouter);
 app.use('/providers', providerRouter);
+app.use('/payments', paymentsRouter)
 
 
 mongoose
