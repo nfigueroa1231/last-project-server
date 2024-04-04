@@ -5,7 +5,6 @@ const Payment = require('../models/Payment')
 
 const isAuthenticated = require('../middleware/isAuthenticated')
 
-/* GET home page. */
 router.post('/', isAuthenticated, (req, res, next) => {
 
     let newPayment = req.body
