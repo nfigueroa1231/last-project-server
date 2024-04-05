@@ -123,7 +123,6 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 
 })
 
-
 router.get('/details/:providerId', isAuthenticated, async (req, res, next) => {
 
     try {
@@ -166,6 +165,24 @@ router.get('/details/:providerId', isAuthenticated, async (req, res, next) => {
 
 })
 
+router.delete('/:providerId', async (req, res, next) => {
+    console.log("delete =======>")
+    Account.deleteOne({providerId:req.params})
+    .then((deletedAccount) => {
+        res.json(deletedAccount)
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+    Provider.findByIdAndDelete(req.params.providerId)
+    .then((deletedProviderId) => {
+        res.json(deletedProviderId)
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+
+})
 
 
 module.exports = router;
