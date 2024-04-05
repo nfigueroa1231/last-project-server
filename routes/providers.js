@@ -166,20 +166,22 @@ router.get('/details/:providerId', isAuthenticated, async (req, res, next) => {
 })
 
 router.delete('/:providerId', async (req, res, next) => {
-    console.log("delete =======>")
-    Account.deleteOne({providerId:req.params})
-    .then((deletedAccount) => {
-        res.json(deletedAccount)
+    const { providerId } = req.params;
+
+    Provider.findByIdAndDelete(providerId)
+    .then((deletedProvider) => {
+        Account.deleteMany({providerId})
+            .then((deletedAccounts) => {
+
+                res.json({deletedProvider, deletedAccounts})
+            })
+            .catch((err) => {
+                res.status(501).json(err)
+            })
     })
     .catch((err) => {
         console.log(err)
-    })
-    Provider.findByIdAndDelete(req.params.providerId)
-    .then((deletedProviderId) => {
-        res.json(deletedProviderId)
-    })
-    .catch((err) => {
-        console.log(err)
+        res.status(502).json(err)
     })
 
 })

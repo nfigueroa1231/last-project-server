@@ -89,21 +89,6 @@ router.get("/delete/:accountId", isAuthenticated, (req, res, next) => {
     }) 
 })
 
-// due date
-// router.post("/auto-update/:expenseId", (req, res, next) => {
-//   Expense.findByIdAndUpdate(
-//     req.params.expenseId,
-//     req.body,
-//     {new: true}
-//   )
-//     .then((updatedExpense) => {
-//       console.log("This is the updated date Expense ===>", updatedExpense)
-//       res.json(updatedExpense)
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//       res.json(err)
-//     })
-// })
+
 
 module.exports = router;
